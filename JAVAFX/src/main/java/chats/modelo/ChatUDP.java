@@ -7,7 +7,18 @@ import java.util.Scanner;
 
 public class ChatUDP {
     private static final int PUERTO = 5000;  // Mismo puerto para enviar y recibir
-    private static final String BROADCAST_IP = "192.168.94.255"; // Dirección de Broadcast
+    private static String BROADCAST_IP;
+
+    static {
+        try {
+            InetAddress localHost = InetAddress.getLocalHost();
+            String localIp = localHost.getHostAddress();
+            String[] ipParts = localIp.split("\\.");
+            BROADCAST_IP = ipParts[0] + "." + ipParts[1] + "." + ipParts[2] + ".255";
+        } catch (UnknownHostException e) {
+            BROADCAST_IP = "255.255.255.255";
+        }
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
