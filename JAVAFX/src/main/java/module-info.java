@@ -3,6 +3,5 @@ module chats.vistas {
     requires javafx.fxml;
 
     opens chats.vistas to javafx.fxml;
-    opens chats.modelo to javafx.graphics;
     exports chats;
 }

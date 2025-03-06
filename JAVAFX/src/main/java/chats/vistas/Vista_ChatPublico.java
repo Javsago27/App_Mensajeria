@@ -2,7 +2,7 @@ package chats.vistas;
 
 import java.io.IOException;
 
-import chats.modelo.ChatUDP;
+import chats.App;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -77,7 +77,7 @@ public class Vista_ChatPublico extends Vista{
             AnchorPane.setTopAnchor(label, yPosition);
             AnchorPane.setRightAnchor(label, 10.0);
 
-            ChatUDP.enviarMensaje(cuadroMensaje.getText());
+            App.enviarMensaje(cuadroMensaje.getText());
 
             // Añadir el TextField al AnchorPane
             vistaMensajes.getChildren().add(label);
