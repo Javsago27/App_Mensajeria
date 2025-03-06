@@ -7,7 +7,7 @@ import chats.vistas.Vista_ChatPublico;
 
 public class Controlador_ChatPublico extends Controlador{
 
-    private Vista_ChatPublico vista;
+    private static Vista_ChatPublico vista;
     private ControladorPrincipal controlador;
 
     public Controlador_ChatPublico(ControladorPrincipal controlador) throws IOException{
@@ -15,6 +15,9 @@ public class Controlador_ChatPublico extends Controlador{
         vista = new Vista_ChatPublico(this);
     }
 
+    public static void pintarMensajeRecibido(String mensaje){
+        vista.pintarMensajeRecibido(mensaje);
+    }
 
 
     @Override

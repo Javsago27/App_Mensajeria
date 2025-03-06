@@ -1,11 +1,20 @@
 package chats.modelo;
 
+import chats.controladores.ControladorPrincipal;
+import chats.controladores.Controlador_ChatPublico;
+import chats.vistas.Vista_ChatPublico;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class ChatUDP {
+public class ChatUDP extends Application {
     private static final int PUERTO = 5000;  // Mismo puerto para enviar y recibir
     private static String BROADCAST_IP;
 
@@ -21,6 +30,8 @@ public class ChatUDP {
     }
 
     public static void main(String[] args) {
+        new Thread(() -> Application.launch(ChatUDP.class)).start();
+
         Scanner scanner = new Scanner(System.in);
 
         // Hilo para recibir mensajes
@@ -37,6 +48,8 @@ public class ChatUDP {
                     String mensaje = new String(paquete.getData(), 0, paquete.getLength());
                     String ipRemitente = paquete.getAddress().getHostAddress();
 
+                    Platform.runLater(() -> Controlador_ChatPublico.pintarMensajeRecibido(mensaje));
+
                     System.out.println("\n📩 Mensaje recibido desde " + ipRemitente + " → " + mensaje);
                     System.out.print("> ");
                 }
@@ -47,25 +60,24 @@ public class ChatUDP {
         }).start();
 
         // Hilo para enviar mensajes por Broadcast
+    }
+
+    public static void enviarMensaje(String mensaje){
         try (DatagramSocket socket = new DatagramSocket()) {
             socket.setBroadcast(true);  // Habilita el envío por broadcast
             InetAddress direccionBroadcast = InetAddress.getByName(BROADCAST_IP);
-            System.out.println("✏ Escribe un mensaje para enviar (o 'salir' para terminar):");
-
-            while (true) {
-                System.out.print("> ");
-                String mensaje = scanner.nextLine();
-                if (mensaje.equalsIgnoreCase("salir")) break;
-
-                byte[] buffer = mensaje.getBytes();
-                DatagramPacket paquete = new DatagramPacket(buffer, buffer.length, direccionBroadcast, PUERTO);
-
-                socket.send(paquete);
-                System.out.println("📤 Mensaje enviado por broadcast → " + mensaje);
-            }
+            byte[] buffer = mensaje.getBytes();
+            DatagramPacket paquete = new DatagramPacket(buffer, buffer.length, direccionBroadcast, PUERTO);
+            socket.send(paquete);
+            System.out.println("📤 Mensaje enviado por broadcast → " + mensaje);
         } catch (Exception e) {
             System.err.println("❌ Error en el envío: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void start(Stage stage) throws IOException {
+        new ControladorPrincipal(stage);
     }
 }

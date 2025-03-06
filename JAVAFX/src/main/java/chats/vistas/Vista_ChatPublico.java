@@ -2,6 +2,7 @@ package chats.vistas;
 
 import java.io.IOException;
 
+import chats.modelo.ChatUDP;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -42,6 +43,24 @@ public class Vista_ChatPublico extends Vista{
         }
     }
 
+    public void pintarMensajeRecibido(String mensaje){
+        Label label = new Label();
+        //textField.setDisable(true);
+        label.setStyle("-fx-padding: 10; -fx-border-radius: 15; -fx-background-radius: 15; -fx-text-fill: black; -fx-background-color: red; -fx-opacity: 1; -fx-control-inner-background: lightgreen;");
+        label.setText(mensaje);
+        label.setAlignment(Pos.CENTER);
+
+        label.setMaxWidth(350);
+
+        // Posicionar el TextField dinámicamente
+        double yPosition = vistaMensajes.getChildren().size() * 40.0 + 20.0; // Espaciado entre TextFields
+        AnchorPane.setTopAnchor(label, yPosition);
+        AnchorPane.setLeftAnchor(label, 10.0);
+
+        // Añadir el TextField al AnchorPane
+        vistaMensajes.getChildren().add(label);
+    }
+
     @FXML
     private void enviarMensaje() throws IOException {
         if(!cuadroMensaje.getText().isEmpty()){
@@ -57,6 +76,8 @@ public class Vista_ChatPublico extends Vista{
             double yPosition = vistaMensajes.getChildren().size() * 40.0 + 20.0; // Espaciado entre TextFields
             AnchorPane.setTopAnchor(label, yPosition);
             AnchorPane.setRightAnchor(label, 10.0);
+
+            ChatUDP.enviarMensaje(cuadroMensaje.getText());
 
             // Añadir el TextField al AnchorPane
             vistaMensajes.getChildren().add(label);
