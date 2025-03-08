@@ -3,6 +3,7 @@ package chats.vistas;
 import java.io.IOException;
 
 import chats.App;
+import chats.modelo.Modelo;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,6 +19,7 @@ public class Vista_ChatPublico extends Vista{
     private Controlador_ChatPublico controlador;
     protected final String ficheroInterfaz = "chatPublico.fxml";
     private Scene escena;
+    private String usuario;
 
     @FXML
     private AnchorPane root; // Nodo raíz del archivo FXML
@@ -43,22 +45,31 @@ public class Vista_ChatPublico extends Vista{
         }
     }
 
-    public void pintarMensajeRecibido(String mensaje){
-        Label label = new Label();
+    public void pintarMensajeRecibido(String mensaje, String usuarioRecibido){
+        Label usuarioMensaje = new Label();
+        Label texto = new Label();
         //textField.setDisable(true);
-        label.setStyle("-fx-padding: 10; -fx-border-radius: 15; -fx-background-radius: 15; -fx-text-fill: black; -fx-background-color: red; -fx-opacity: 1; -fx-control-inner-background: lightgreen;");
-        label.setText(mensaje);
-        label.setAlignment(Pos.CENTER);
+        usuarioMensaje.setStyle("-fx-padding: 10; -fx-border-radius: 15; -fx-background-radius: 15; -fx-text-fill: black; -fx-background-color: #DCDCDC; -fx-opacity: 1; -fx-control-inner-background: lightgreen;");
+        texto.setStyle("-fx-padding: 10; -fx-border-radius: 15; -fx-background-radius: 15; -fx-text-fill: black; -fx-background-color: red; -fx-opacity: 1; -fx-control-inner-background: lightgreen;");
 
-        label.setMaxWidth(350);
+        usuarioMensaje.setText(usuarioRecibido);
+        texto.setText(mensaje);
+        usuarioMensaje.setAlignment(Pos.CENTER);
+        texto.setAlignment(Pos.CENTER);
+
+        usuarioMensaje.setMaxWidth(70);
+        texto.setMaxWidth(350);
 
         // Posicionar el TextField dinámicamente
         double yPosition = vistaMensajes.getChildren().size() * 40.0 + 20.0; // Espaciado entre TextFields
-        AnchorPane.setTopAnchor(label, yPosition);
-        AnchorPane.setLeftAnchor(label, 10.0);
+        AnchorPane.setTopAnchor(usuarioMensaje, yPosition);
+        AnchorPane.setTopAnchor(texto, yPosition);
+        AnchorPane.setLeftAnchor(usuarioMensaje, 10.0);
+        AnchorPane.setLeftAnchor(texto, 10.0);
 
         // Añadir el TextField al AnchorPane
-        vistaMensajes.getChildren().add(label);
+        vistaMensajes.getChildren().add(usuarioMensaje);
+        vistaMensajes.getChildren().add(texto);
     }
 
     @FXML
@@ -77,7 +88,7 @@ public class Vista_ChatPublico extends Vista{
             AnchorPane.setTopAnchor(label, yPosition);
             AnchorPane.setRightAnchor(label, 10.0);
 
-            App.enviarMensaje(cuadroMensaje.getText());
+            App.enviarMensaje(cuadroMensaje.getText(), usuario);
 
             // Añadir el TextField al AnchorPane
             vistaMensajes.getChildren().add(label);
@@ -86,8 +97,29 @@ public class Vista_ChatPublico extends Vista{
         }
     }
 
+    public void establecerUsuario(String nombreUsuario) {
+        this.usuario = nombreUsuario;
+    }
+
+    public void pintarUsuariosConectados(){
+        Modelo m = Modelo.getInstancia();
+        for(int i=0;i<m.getlUsuariosConectados().size();i++){
+            Label label = new Label();
+            label.setStyle("-fx-padding: 10; -fx-border-radius: 15; -fx-background-radius: 15; -fx-text-fill: black; -fx-background-color: transparent; -fx-border-color: black; -fx-border-width: 1;");
+            label.setText(m.getlUsuariosConectados().get(i).getNombre());
+            label.setAlignment(Pos.CENTER);
+
+            label.setMaxWidth(200);
+
+            double yPosition = vistaMensajes.getChildren().size() * 0.0; // Espaciado entre Labels es 0
+            AnchorPane.setTopAnchor(label, yPosition);
+            AnchorPane.setRightAnchor(label, 10.0);
+
+            vistaMensajes.getChildren().add(label);
+        }
+    }
+
     public Scene getEscena() {
         return escena;
     }
-    
 }

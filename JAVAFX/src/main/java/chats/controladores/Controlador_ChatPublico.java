@@ -15,10 +15,13 @@ public class Controlador_ChatPublico extends Controlador{
         vista = new Vista_ChatPublico(this);
     }
 
-    public static void pintarMensajeRecibido(String mensaje){
-        vista.pintarMensajeRecibido(mensaje);
+    public static void pintarMensajeRecibido(String mensaje, String usuarioRecibido){
+        vista.pintarMensajeRecibido(mensaje, usuarioRecibido);
     }
 
+    public void establecerUsuario(String nombreUsuario) {
+        vista.establecerUsuario(nombreUsuario);
+    }
 
     @Override
     public void mostrar() {
@@ -27,5 +30,9 @@ public class Controlador_ChatPublico extends Controlador{
 
     public Scene getEscena1() {
         return vista.getEscena();
+    }
+
+    public void pintarUsuariosConectados() {
+        vista.pintarUsuariosConectados();
     }
 }
