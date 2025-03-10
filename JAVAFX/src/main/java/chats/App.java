@@ -22,7 +22,7 @@ import java.util.Scanner;
  */
 public class App extends Application {
     private static final int PUERTO = 12345;  // Puerto para enviar y recibir mensajes
-    private static String BROADCAST_IP = "192.168.7.255";  // Dirección de broadcast por defecto
+    private static String BROADCAST_IP = "255.255.255.255";  // Dirección de broadcast por defecto
 
     /**
      * Método principal que lanza la aplicación JavaFX y gestiona la recepción de mensajes
